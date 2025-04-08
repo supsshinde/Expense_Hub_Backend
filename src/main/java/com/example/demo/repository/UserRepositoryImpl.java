@@ -98,4 +98,28 @@ public class UserRepositoryImpl implements UserRepository{
 		System.out.println(list1.size() + "---------------------");
 return list1;
 	}
+
+//	@Override
+//	public int registerUser(UserModel user) {
+//		 String sql = "INSERT INTO user (uname, email, password, mobile, city, pincode) VALUES (?, ?, ?, ?, ?, ?)";
+//	        return template.update(sql, user.getUname(), user.getEmail(), user.getPassword(),
+//	                user.getMobile(), user.getCity(), user.getPincode());
+//		
+//	}
+//
+//	@Override
+//	public UserModel loginUser(String email, String pass) {
+//	String sql = "SELECT * FROM user WHERE email = ? AND password = ?";
+//	return template.queryForObject(sql, new Object[]{email, pass}, (rs, rowNum) -> {
+//	UserModel user = new UserModel();
+//	user.setUid(rs.getInt("uid"));
+//	user.setUname(rs.getString("uname"));
+//	user.setEmail(rs.getString("email"));
+//	user.setPassword(rs.getString("password"));
+//	user.setMobile(rs.getLong("mobile"));
+//	user.setCity(rs.getString("city"));
+//	user.setPincode(rs.getInt("pincode"));
+//	return user;
+//	});
+//	}
 }
