@@ -69,4 +69,5 @@ public class UserController {
 		list1 = categoryService.getAllCategories(); 
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
+
 }
