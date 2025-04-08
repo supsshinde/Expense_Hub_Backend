@@ -5,25 +5,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.CategoryModel;
-import com.example.demo.repository.CategoryRepository;
+import com.example.demo.model.UserModel;
+import com.example.demo.repository.AdminRepository;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class AdminServiceImpl implements AdminService{
 
 	@Autowired
-    CategoryRepository categoryRepo;
+    AdminRepository AdminRepo;
 
 	@Override
 	public boolean addCategory(CategoryModel category) {
-		return categoryRepo.addCategory(category);
+		return AdminRepo.addCategory(category);
 	}
 
 	@Override
 	public List<CategoryModel> getAllCategories() {
-		return categoryRepo.getAllCategories();
+		return AdminRepo.getAllCategories();
 	}
 
-	
+	@Override
+	public List<UserModel> getAllUsers() {
 
-	
+		return AdminRepo.getAllUsers();
+	}
 }
