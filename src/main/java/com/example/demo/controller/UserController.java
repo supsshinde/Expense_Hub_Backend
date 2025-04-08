@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.CategoryModel;
 import com.example.demo.model.UserModel;
-import com.example.demo.service.CategoryService;
+import com.example.demo.service.AdminService;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -25,7 +25,7 @@ public class UserController {
 	UserService userService;
 	
 	@Autowired
-	CategoryService categoryService;
+	AdminService adminService;
 	
 	List<UserModel> list=new ArrayList<UserModel>();
 	List<CategoryModel> list1=new ArrayList<CategoryModel>();
@@ -66,7 +66,7 @@ public class UserController {
 	@GetMapping("category/viewCategory")
 	public List<CategoryModel> getAllCategories()
 	{
-		list1 = categoryService.getAllCategories(); 
+		list1 = adminService.getAllCategories(); 
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
 }
