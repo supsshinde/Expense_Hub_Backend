@@ -29,8 +29,33 @@ public class ExpenseServiceImpl implements ExpenseService {
 		// TODO Auto-generated method stub
 		return expRepo.isDeleteExpenseById(eid);
 	}
-	public boolean isUpdate(ExpenseModel expense) {
-		return expRepo.isUpdate(expense);
+//	public boolean isUpdate(ExpenseModel expense) {
+//		return expRepo.isUpdate(expense);
+//	}
+
+	@Override
+	public List<ExpenseModel> fetchAllExpensesWithCategory() {
+		// TODO Auto-generated method stub
+		return expRepo.fetchAllExpensesWithCategory();
+	}
+
+	@Override
+	public ExpenseModel getExpenseById(int eid) {
+		// TODO Auto-generated method stub
+		return expRepo.getExpenseById(eid);
+	}
+
+	@Override
+	public String updateExpense(ExpenseModel exp) {
+		// TODO Auto-generated method stub
+		return expRepo.updateExpense(exp);
+	}
+
+	@Override
+	public void addExpenseForUser(int uid, ExpenseModel expense) {
+		// TODO Auto-generated method stub
+		expRepo.addExpenseForUser(uid, expense);
+		
 	}
 
 }

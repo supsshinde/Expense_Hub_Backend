@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import com.example.demo.model.CategoryModel;
+import com.example.demo.model.ExpenseCategoryDistribution;
 import com.example.demo.model.UserModel;
 
 @Repository
@@ -58,6 +59,21 @@ public class AdminRepositoryImpl implements AdminRepository{
 				});
 		return list;
 	}
+	@Override
+	public boolean deleteCategoryById(int cid) {
+	    int result = template.update("DELETE FROM category WHERE cid = ?", cid);
+	    return result > 0;
+	}
+	@Override
+	public boolean updateCategory(CategoryModel category) {
+	    int result = template.update(
+	        "UPDATE category SET cname = ? WHERE cid = ?",
+	        category.getCname(),
+	        category.getCid()
+	    );
+	    return result > 0;
+	}
+
 
 	@Override
 	public List<UserModel> getAllUsers() {
@@ -77,7 +93,8 @@ public class AdminRepositoryImpl implements AdminRepository{
 				u.setUname(rs.getString(2));
 				u.setEmail(rs.getString(3));
 				u.setPassword(rs.getString(4));
-				u.setCreated_date(sqlDate);
+				u.setCreated_date(rs.getDate(5)); // 5th column is created_at
+
 				u.setMobile(rs.getLong(6));
 				u.setCity(rs.getString(7));
 				u.setPincode(rs.getInt(8));
@@ -87,4 +104,50 @@ public class AdminRepositoryImpl implements AdminRepository{
 		});
 		return list1;
 	}
+	@Override
+	public boolean deleteUser(int uid) {
+	    String sql = "DELETE FROM user WHERE uid = ?";
+	    int deleted = template.update(sql, uid);
+	    return deleted > 0;
+	}
+
+	@Override
+	public int getTotalCategoryCount() {
+		String sql = "SELECT COUNT(*) FROM category";
+        return template.queryForObject(sql, Integer.class);
+	}
+
+	@Override
+	public int getTotalUserCount() {
+		 String sql = "SELECT COUNT(*) FROM user";
+	        return template.queryForObject(sql, Integer.class);
+	}
+
+	@Override
+	public int getTotalExpensesCount() {
+		String sql="select COUNT(*) from expense";
+		return template.queryForObject(sql, Integer.class);
+	}
+
+	@Override
+	public int getTotalBudgetCount() {
+		String sql="select COUNT(*) from budget";
+		return template.queryForObject(sql, Integer.class);
+	}
+	
+	 public List<ExpenseCategoryDistribution> getExpenseDistributionByCategory() {
+	        String sql = "SELECT c.Cname AS category, SUM(ue.expense_price) AS amount " +
+	                     "FROM user_expense ue " +
+	                     "JOIN expense e ON ue.eid = e.eid " +
+	                     "JOIN category c ON e.cid = c.cid " +
+	                     "GROUP BY c.Cname";
+
+	        return template.query(sql, (rs, rowNum) ->
+	            new ExpenseCategoryDistribution(
+	                rs.getString("category"),
+	                rs.getDouble("amount")
+	            )
+	        );
+
+}
 }

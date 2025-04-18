@@ -99,6 +99,35 @@ public class UserRepositoryImpl implements UserRepository{
 return list1;
 	}
 
+	@Override
+	public boolean loginUser(String email, String password) {
+		String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
+	    Integer count = template.queryForObject(sql, new Object[]{email, password}, Integer.class);
+	    return count != null && count > 0;
+	}
+	public UserModel getUserById(int uid) {
+	    String query = "SELECT * FROM user WHERE uid = ?";
+	    
+	    return template.queryForObject(query, new Object[]{uid}, new RowMapper<UserModel>() {
+
+	        @Override
+	        public UserModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+	            UserModel user = new UserModel();
+	            user.setUid(rs.getInt("uid"));
+	            user.setUname(rs.getString("uname"));
+	            user.setEmail(rs.getString("email"));
+	            user.setPassword(rs.getString("password"));
+	            user.setCreated_date(rs.getDate("created_at"));
+	            user.setMobile(rs.getLong("mobile_no"));
+	            user.setCity(rs.getString("city"));
+	            user.setPincode(rs.getInt("pincode"));
+	            return user;
+	        }
+	    });
+	}
+
+
+
 //	@Override
 //	public int registerUser(UserModel user) {
 //		 String sql = "INSERT INTO user (uname, email, password, mobile, city, pincode) VALUES (?, ?, ?, ?, ?, ?)";
