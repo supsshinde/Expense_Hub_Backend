@@ -11,5 +11,7 @@ public interface UserRepository {
 	public List<CategoryModel> getAllCategories();
 //	int registerUser(UserModel user);
 //    UserModel loginUser(String email, String pass);
+	public boolean loginUser(String email, String password);
+	public UserModel getUserById(int uid);
 
 }

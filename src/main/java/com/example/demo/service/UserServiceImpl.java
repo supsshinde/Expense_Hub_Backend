@@ -36,6 +36,18 @@ public class UserServiceImpl implements UserService{
 		return userRepository.getAllCategories();
 	}
 
+	@Override
+	public boolean loginUser(String email, String password) {
+		// TODO Auto-generated method stub
+		return userRepository.loginUser(email, password);
+	}
+
+	@Override
+	public UserModel getUserById(int uid) {
+		// TODO Auto-generated method stub
+		return userRepository.getUserById(uid);
+	}
+
 //	@Override
 //	public int registerUser(UserModel user) {
 //		// TODO Auto-generated method stub

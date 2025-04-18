@@ -21,59 +21,25 @@ import com.example.demo.service.ExpenseServiceImpl;
 @RestController
 @RequestMapping("/expense")
 public class Expense_controller {
-	@Autowired
-	ExpenseServiceImpl expService;
-	List<ExpenseModel> list=new ArrayList<>();
-	@PostMapping("/addExpense")
-	public String addExpense(@RequestBody ExpenseModel expense )
-	{
-		boolean b=expService.addExpense(expense);
-		if(b)
-		{
-			return "expense added";
-		}
-		else
-		{
-			return "expense not added";
-		}
+//	@Autowired
+//	ExpenseServiceImpl expService;
+//	List<ExpenseModel> list=new ArrayList<>();
+//	@PostMapping("/addExpense")
+//	public String addExpense(@RequestBody ExpenseModel expense )
+//	{
+//		boolean b=expService.addExpense(expense);
+//		if(b)
+//		{
+//			return "expense added";
+//		}
+//		else
+//		{
+//			return "expense not added";
+//		}
+//	
+//	}
 	
-	}
-	@GetMapping("/viewExpense")
-	public List<ExpenseModel> viewExpense()
-	{
-		list=expService.getAllExpenses();
-		 return (list != null && !list.isEmpty()) ? list : Collections.emptyList();
-		
-	}
 	
-	@DeleteMapping("/deleteById/{eid}")
-	public String deleteExpensebyId(@PathVariable int eid)
-	{
-		boolean b1=expService.isDeleteExpenseById(eid);
-		if(b1)
-		{
-			return "expense deleted";
-		}
-		else
-		{
-			return "expense not found to delete";
-		}
-		
-	}
-	@PutMapping("/updateById")
-	public String UpdateExpense(@RequestBody ExpenseModel expense)
-	{
-		boolean b2=expService.isUpdate(expense);
-		if(b2)
-		{
-			return "expense Updated";
-		}
-		else
-		{
-			return "expense not found to update";
-		}
-		
-	}
 	
 	
 
