@@ -29,9 +29,6 @@ public class ExpenseServiceImpl implements ExpenseService {
 		// TODO Auto-generated method stub
 		return expRepo.isDeleteExpenseById(eid);
 	}
-//	public boolean isUpdate(ExpenseModel expense) {
-//		return expRepo.isUpdate(expense);
-//	}
 
 	@Override
 	public List<ExpenseModel> fetchAllExpensesWithCategory() {

@@ -10,8 +10,7 @@ public interface UserRepository {
 	public boolean updateUser(UserModel user, int uid);
 	public List<UserModel> searchUser(String pattern, UserModel user);
 	public List<CategoryModel> getAllCategories();
-//	int registerUser(UserModel user);
-//    UserModel loginUser(String email, String pass);
+
 	public boolean loginUser(String email, String password);
 	public UserModel getUserById(int uid);
 	public UserModel getUserByEmailAndPassword(String email, String password);

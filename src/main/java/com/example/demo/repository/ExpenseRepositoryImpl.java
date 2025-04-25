@@ -30,26 +30,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 	    Date sqlDate = Date.valueOf(currentDate); 
 	    
 	    List<ExpenseModel> list=new ArrayList<ExpenseModel>(); 
-	   // List<CategoryModel> list=new ArrayList<CategoryModel>();
-//	@Override
-//	public boolean addExpense(ExpenseModel expense) {
-//		int value=template.update("insert into expense values('0',?,?,?,?,?,?)",new PreparedStatementSetter() {
-//			
-//			@Override
-//			public void setValues(PreparedStatement ps) throws SQLException {
-//				ps.setString(1, expense.getEname());
-//				ps.setFloat(2, expense.getEprice());
-//				ps.setString(3,expense.getPaymentMethod());
-//				ps.setString(4,expense.getDescription());
-//				ps.setDate(5, sqlDate);
-//				ps.setInt(6, expense.getCid());
-//				
-//				
-//				
-//			}
-//		});
-//		return value>0?true:false;
-//	}
+	  
 	    public boolean addExpense(ExpenseModel expense) {
 	        try {
 	            // Step 1: Insert into expense table
@@ -146,24 +127,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		int value=template.update("delete from expense where eid=?",eid);
 		return value>0?true:false;
 	}
-//	@Override
-//	public boolean isUpdate(ExpenseModel expense) {
-//		int value=template.update("update expense set  ename=?, eprice=?,payment_method=?,description=?,expense_date=?, cid=? where eid=?", new PreparedStatementSetter() {
-//			
-//			@Override
-//			public void setValues(PreparedStatement ps) throws SQLException {
-//				ps.setString(1, expense.getEname());
-//				ps.setFloat(2, expense.getEprice());
-//				ps.setString(3, expense.getPaymentMethod());
-//				ps.setString(4,expense.getDescription());
-//				ps.setDate(5, sqlDate);
-//				ps.setInt(6,expense.getCid());
-//				 ps.setInt(7, expense.getEid());
-//				
-//			}
-//		});
-//		return value>0?true:false;
-//	}
+	
 	@Override
 	public List<ExpenseModel> fetchAllExpensesWithCategory() {
 		String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, e.cid, c.cname " +
@@ -207,30 +171,24 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
 	@Override
 	public void addExpenseForUser(int uid, ExpenseModel expense) {
-		 String insertExpense = "INSERT INTO expense (ename, eprice, payment_method, description, expense_date, cid) VALUES (?, ?, ?, ?, ?, ?)";
-		    GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+		String insertExpense = "INSERT INTO expense (ename, eprice, payment_method, description, expense_date, cid) VALUES (?, ?, ?, ?, ?, ?)";
+		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
 
-		    template.update(connection -> {
-		        PreparedStatement ps = connection.prepareStatement(insertExpense, Statement.RETURN_GENERATED_KEYS);
-		        ps.setString(1, expense.getEname());
-		        ps.setDouble(2, expense.getEprice());
-		        ps.setString(3, expense.getPaymentMethod());
-		        ps.setString(4, expense.getDescription());
-		        ps.setDate(5, sqlDate);
-		        ps.setInt(6, expense.getCid());
-		        return ps;
-		    }, keyHolder);
+		template.update(connection -> {
+			PreparedStatement ps = connection.prepareStatement(insertExpense, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, expense.getEname());
+			ps.setDouble(2, expense.getEprice());
+			ps.setString(3, expense.getPaymentMethod());
+			ps.setString(4, expense.getDescription());
+			ps.setDate(5, sqlDate);
+			ps.setInt(6, expense.getCid());
+			return ps;
+		}, keyHolder);
 
-		    int eid = keyHolder.getKey().intValue();
+		int eid = keyHolder.getKey().intValue();
 
-		    // Insert into `user_expense` table
-		    String insertUserExpense = "INSERT INTO user_expense (uid, eid, expense_price) VALUES (?, ?, ?)";
-		    template.update(insertUserExpense, uid, eid, expense.getEprice());
-		}
-		
-	
-
-
-	
-
+		// Insert into `user_expense` table
+		String insertUserExpense = "INSERT INTO user_expense (uid, eid, expense_price) VALUES (?, ?, ?)";
+		template.update(insertUserExpense, uid, eid, expense.getEprice());
+	}
 }
