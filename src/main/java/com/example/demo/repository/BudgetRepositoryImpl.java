@@ -82,8 +82,4 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 	    return value > 0 ? true : false;
 	}
 
-	
-	
-	
-
 }

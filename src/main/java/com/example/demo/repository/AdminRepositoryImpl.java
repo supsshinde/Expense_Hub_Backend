@@ -64,14 +64,12 @@ public class AdminRepositoryImpl implements AdminRepository{
 	    int result = template.update("DELETE FROM category WHERE cid = ?", cid);
 	    return result > 0;
 	}
+
 	@Override
 	public boolean updateCategory(CategoryModel category) {
-	    int result = template.update(
-	        "UPDATE category SET cname = ? WHERE cid = ?",
-	        category.getCname(),
-	        category.getCid()
-	    );
-	    return result > 0;
+		int result = template.update("UPDATE category SET cname = ? WHERE cid = ?", category.getCname(),
+				category.getCid());
+		return result > 0;
 	}
 
 
@@ -148,6 +146,5 @@ public class AdminRepositoryImpl implements AdminRepository{
 	                rs.getDouble("amount")
 	            )
 	        );
-
 }
 }

@@ -59,16 +59,4 @@ public class UserServiceImpl implements UserService{
 		// TODO Auto-generated method stub
 		return userRepository.resetPassword(email, newPassword);
 	}
-
-//	@Override
-//	public int registerUser(UserModel user) {
-//		// TODO Auto-generated method stub
-//		return userRepository.registerUser(user);
-//	}
-//
-//	@Override
-//	public UserModel loginUser(String email, String password) {
-//		// TODO Auto-generated method stub
-//		return userRepository.loginUser(email, password);
-//	}
 }

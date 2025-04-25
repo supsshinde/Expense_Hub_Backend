@@ -1,6 +1,4 @@
 package com.example.demo.model;
-
-import java.math.BigDecimal;
 import java.sql.Date;
 
 import lombok.AllArgsConstructor;

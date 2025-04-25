@@ -29,8 +29,6 @@ import com.example.demo.service.BudgetService;
 import com.example.demo.service.ExpenseServiceImpl;
 import com.example.demo.service.UserService;
 
-import jakarta.servlet.http.HttpSession;
-
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -64,21 +62,7 @@ public class UserController {
 			return "User Not Added";
 		}
 	}
-	
-	
-//	@PutMapping("/updateUser/{uid}")
-//	public String updateUser(@RequestBody UserModel user, @PathVariable int uid) {
-//		boolean b = userService.updateUser(user, uid);
-//
-//		if(b)
-//		{
-//			return "User Updated";
-//		}
-//		else
-//		{
-//			return "User Not Updated";
-//		}
-//	}
+
 	@PutMapping("/editProfile/{uid}")
     public ResponseEntity<String> editProfile(@PathVariable int uid, @RequestBody UserModel user) {
         boolean success = userService.updateUser(user, uid);
@@ -126,18 +110,7 @@ public class UserController {
 		list1 = adminService.getAllCategories(); 
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
-//	@PostMapping("/login")
-//	public ResponseEntity<String> loginUser(@RequestBody Map<String, String> loginData) {
-//	    String email = loginData.get("username");
-//	    String password = loginData.get("password");
-//
-//	    boolean isValid = userService.loginUser(email, password);
-//	    if (isValid) {
-//	        return ResponseEntity.ok("Login Successful!");
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
-//	    }
-//	}
+
 	@PostMapping("/login")
 	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
 	    String email = loginData.get("username");
@@ -168,13 +141,6 @@ public class UserController {
 		}
 	
 	}
-//	@GetMapping("/viewExpense")
-//	public List<ExpenseModel> viewExpense()
-//	{
-//		list11=expService.getAllExpenses();
-//		 return (list11 != null && !list11.isEmpty()) ? list11 : Collections.emptyList();
-//		
-//	}
 	
 	@DeleteMapping("/deleteById/{eid}")
 	public String deleteExpensebyId(@PathVariable int eid)
@@ -261,24 +227,4 @@ public class UserController {
 	    List<ExpenseModel> expenses = expService.getExpensesByUid(uid);
 	    return ResponseEntity.ok(expenses);
 	}
-
-
-
-
-//	@PutMapping("/updateById")
-//	public String UpdateExpense(@RequestBody ExpenseModel expense)
-//	{
-//		boolean b2=expService.isUpdate(expense);
-//		if(b2)
-//		{
-//			return "expense Updated";
-//		}
-//		else
-//		{
-//			return "expense not found to update";
-//		}
-//		
-//	}
-	
-
 }

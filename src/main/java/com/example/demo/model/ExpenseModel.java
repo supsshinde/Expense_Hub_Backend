@@ -9,17 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//public class ExpenseModel {
-//	 private int eid;
-//	    private String ename;
-//	    private float eprice;
-//	    private String paymentMethod;
-//	    private String description;
-//	    private Date expenseDate;
-//	    private int cid;
-//
-//}
-
 public class ExpenseModel {
     private int eid;
     private String ename;
