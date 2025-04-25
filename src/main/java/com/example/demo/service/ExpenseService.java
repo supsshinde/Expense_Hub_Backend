@@ -13,4 +13,7 @@ public interface ExpenseService {
 	public ExpenseModel getExpenseById(int eid) ;
 	public String updateExpense(ExpenseModel exp);
 	public void addExpenseForUser(int uid, ExpenseModel expense);
+	List<ExpenseModel> getExpensesByUid(int uid);
+	 public List<ExpenseModel> getExpensesByUserId(Integer uid) ;
+
 }

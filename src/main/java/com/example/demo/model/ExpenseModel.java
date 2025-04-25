@@ -29,6 +29,7 @@ public class ExpenseModel {
     private Date expenseDate;
     private int cid;
     private String categoryName;  // Add this field
+    private int uid;
 }
 
 

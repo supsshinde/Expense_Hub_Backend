@@ -14,5 +14,8 @@ public interface UserService {
 //    UserModel loginUser(String email, String password);
 	public boolean loginUser(String email, String password);
 	public UserModel getUserById(int uid);
+	public UserModel getUserByEmailAndPassword(String email, String password);
+	public boolean resetPassword(String email, String newPassword);
+
 
 }

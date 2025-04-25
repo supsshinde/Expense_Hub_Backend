@@ -47,24 +47,33 @@ public class UserRepositoryImpl implements UserRepository{
 		return add>0?true:false;
 	}
 
-	@Override
+//	@Override
+//	public boolean updateUser(UserModel user, int uid) {
+//		int update = template.update("UPDATE user SET uname=?, email=?, password=?, mobile_no=?, city=?, pincode=? WHERE uid=?", new PreparedStatementSetter() {
+//		    @Override
+//		    public void setValues(PreparedStatement ps) throws SQLException {
+//		        ps.setString(1, user.getUname());
+//		        ps.setString(2, user.getEmail());
+//		        ps.setString(3, user.getPassword());
+//		        ps.setLong(4, user.getMobile());
+//		        ps.setString(5, user.getCity());
+//		        ps.setInt(6, user.getPincode());
+//		        ps.setInt(7, uid);
+//		    }
+//		});
+//
+//		return update>0?true:false;
+//	}
 	public boolean updateUser(UserModel user, int uid) {
-		int update=template.update("UPDATE user SET uname=?, email=?, password=?, mobile_no=?, city=?, pincode=? WHERE uid=?", new PreparedStatementSetter() {
-			
-			@Override
-			public void setValues(PreparedStatement ps) throws SQLException {
-				 ps.setString(1, user.getUname()); 
-		         ps.setString(2, user.getEmail());   
-		         ps.setString(3, user.getPassword());
-		         ps.setLong(4, user.getMobile());
-		         ps.setString(5, user.getCity());
-		         ps.setInt(6, user.getPincode());
-		         ps.setInt(7, uid);
-			}
-		});
-		return update>0?true:false;
-	}
-
+        // SQL query to update user profile
+        String sql = "UPDATE user SET uname = ?, email = ?, password = ?, mobile_no = ?, city = ?, pincode = ? WHERE uid = ?";
+        
+        // Executing the update query
+        int updateCount = template.update(sql, user.getUname(), user.getEmail(), user.getPassword(),
+                                             user.getMobile(), user.getCity(), user.getPincode(), uid);
+        
+        return updateCount > 0; // Return true if one row is updated, else false
+    }
 	@Override
 	public List<UserModel> searchUser(String pattern, UserModel user) {
 		
@@ -125,6 +134,35 @@ return list1;
 	        }
 	    });
 	}
+	public UserModel getUserByEmailAndPassword(String email, String password) {
+	    String query = "SELECT * FROM user WHERE email = ? AND password = ?";
+	    try {
+	        return template.queryForObject(query, new Object[]{email, password}, new RowMapper<UserModel>() {
+	            @Override
+	            public UserModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+	                UserModel user = new UserModel();
+	                user.setUid(rs.getInt("uid"));
+	                user.setUname(rs.getString("uname"));
+	                user.setEmail(rs.getString("email"));
+	                user.setPassword(rs.getString("password"));
+	                user.setCreated_date(rs.getDate("created_at"));
+	                user.setMobile(rs.getLong("mobile_no"));
+	                user.setCity(rs.getString("city"));
+	                user.setPincode(rs.getInt("pincode"));
+	                return user;
+	            }
+	        });
+	    } catch (Exception e) {
+	        return null; // Return null if login fails
+	    }
+	}
+
+	@Override
+	public boolean resetPassword(String email, String newPassword) {
+	    int result = template.update("UPDATE user SET password = ? WHERE email = ?", newPassword, email);
+	    return result > 0;
+	}
+
 
 
 

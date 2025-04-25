@@ -58,4 +58,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 		
 	}
 
+	@Override
+	public List<ExpenseModel> getExpensesByUid(int uid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<ExpenseModel> getExpensesByUserId(Integer uid) {
+		// TODO Auto-generated method stub
+		return expRepo.getExpensesByUserId(uid);
+	}
+
 }

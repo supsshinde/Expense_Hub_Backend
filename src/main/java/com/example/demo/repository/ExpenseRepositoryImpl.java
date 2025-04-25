@@ -31,25 +31,86 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 	    
 	    List<ExpenseModel> list=new ArrayList<ExpenseModel>(); 
 	   // List<CategoryModel> list=new ArrayList<CategoryModel>();
-	@Override
-	public boolean addExpense(ExpenseModel expense) {
-		int value=template.update("insert into expense values('0',?,?,?,?,?,?)",new PreparedStatementSetter() {
-			
-			@Override
-			public void setValues(PreparedStatement ps) throws SQLException {
-				ps.setString(1, expense.getEname());
-				ps.setFloat(2, expense.getEprice());
-				ps.setString(3,expense.getPaymentMethod());
-				ps.setString(4,expense.getDescription());
-				ps.setDate(5, sqlDate);
-				ps.setInt(6, expense.getCid());
-				
-				
-				
-			}
-		});
-		return value>0?true:false;
-	}
+//	@Override
+//	public boolean addExpense(ExpenseModel expense) {
+//		int value=template.update("insert into expense values('0',?,?,?,?,?,?)",new PreparedStatementSetter() {
+//			
+//			@Override
+//			public void setValues(PreparedStatement ps) throws SQLException {
+//				ps.setString(1, expense.getEname());
+//				ps.setFloat(2, expense.getEprice());
+//				ps.setString(3,expense.getPaymentMethod());
+//				ps.setString(4,expense.getDescription());
+//				ps.setDate(5, sqlDate);
+//				ps.setInt(6, expense.getCid());
+//				
+//				
+//				
+//			}
+//		});
+//		return value>0?true:false;
+//	}
+	    public boolean addExpense(ExpenseModel expense) {
+	        try {
+	            // Step 1: Insert into expense table
+	            String expenseSql = "INSERT INTO expense (ename, eprice, payment_method, description, expense_date, cid) VALUES (?, ?, ?, ?, ?, ?)";
+	            template.update(expenseSql,
+	                expense.getEname(),
+	                expense.getEprice(),
+	                expense.getPaymentMethod(),
+	                expense.getDescription(),
+	                sqlDate,
+	                expense.getCid()
+	            );
+
+	            // Step 2: Get the inserted eid
+	            Integer eid = template.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+
+	            // Step 3: Insert into user_expense
+	            String userExpenseSql = "INSERT INTO user_expense (uid, eid, expense_price) VALUES (?, ?, ?)";
+	            template.update(userExpenseSql,
+	                expense.getUid(),
+	                eid,
+	                expense.getEprice()
+	            );
+
+	            return true; // ✅ Success
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false; // ❌ Failure
+	        }
+	    }
+
+	 // Service
+	    public List<ExpenseModel> getExpensesByUserId(Integer uid) {
+	    	String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, " +
+	                "e.cid, c.cname AS category_name, u.uid AS uid " +
+	                "FROM expense e " +
+	                "JOIN category c ON e.cid = c.cid " +
+	                "JOIN user_expense ue ON e.eid = ue.eid " +
+	                "JOIN user u ON ue.uid = u.uid " +
+	                "WHERE u.uid = ?";
+
+
+
+	        // Query the database and map the result directly without a separate RowMapper
+	        return template.query(sql, new Object[]{uid}, (rs, rowNum) -> {
+	            ExpenseModel expense = new ExpenseModel();
+	            expense.setEid(rs.getInt("eid"));
+	            expense.setEname(rs.getString("ename"));
+	            expense.setEprice(rs.getFloat("eprice"));
+	            expense.setPaymentMethod(rs.getString("payment_method"));
+	            expense.setDescription(rs.getString("description"));
+	            expense.setExpenseDate(rs.getDate("expense_date"));
+	            expense.setCid(rs.getInt("cid"));
+	            expense.setCategoryName(rs.getString("category_name")); // Mapping the category name directly
+	            expense.setUid(rs.getInt("uid"));
+
+
+	            return expense;
+	        });
+	    }
+
 	
 	@Override
 	public List<ExpenseModel> getAllExpenses() {
@@ -71,6 +132,15 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		});
 		return list;
 	}
+	@Override
+	public List<ExpenseModel> getExpensesByUid(int uid) {
+	    String sql = "SELECT e.* FROM expense e " +
+	                 "JOIN user_expense ue ON e.eid = ue.eid " +
+	                 "WHERE ue.uid = ?";
+	    
+	    return template.query(sql, new BeanPropertyRowMapper<>(ExpenseModel.class), uid);
+	}
+
 	@Override
 	public boolean isDeleteExpenseById(int eid) {
 		int value=template.update("delete from expense where eid=?",eid);
