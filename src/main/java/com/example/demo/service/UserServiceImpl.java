@@ -37,6 +37,12 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	public UserModel getUserByEmailAndPassword(String email, String password) {
+		// TODO Auto-generated method stub
+		return userRepository.getUserByEmailAndPassword(email, password);
+	}
+
+	@Override
 	public boolean loginUser(String email, String password) {
 		// TODO Auto-generated method stub
 		return userRepository.loginUser(email, password);
@@ -46,6 +52,12 @@ public class UserServiceImpl implements UserService{
 	public UserModel getUserById(int uid) {
 		// TODO Auto-generated method stub
 		return userRepository.getUserById(uid);
+	}
+
+	@Override
+	public boolean resetPassword(String email, String newPassword) {
+		// TODO Auto-generated method stub
+		return userRepository.resetPassword(email, newPassword);
 	}
 
 //	@Override
