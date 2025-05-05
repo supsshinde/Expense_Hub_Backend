@@ -7,6 +7,7 @@ import com.example.demo.model.UserModel;
 
 public interface AdminService {
 
+	public boolean adminLogin(String username, String password);
 	public boolean addCategory(CategoryModel category);
 	public List<CategoryModel> getAllCategories();
 	public boolean deleteCategoryById(int cid);
