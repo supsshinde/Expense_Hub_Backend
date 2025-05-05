@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.BudgetModel;
@@ -111,20 +112,29 @@ public class UserController {
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
 
+//	@PostMapping("/login")
+//	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
+//	    String email = loginData.get("username");
+//	    String password = loginData.get("password");
+//
+//	    UserModel user = userService.getUserByEmailAndPassword(email, password);
+//	    if (user != null) {
+//	        Map<String, Object> response = new HashMap<>();
+//	        response.put("uid", user.getUid());               
+//	        response.put("message", "Login Successful!");     
+//	        return ResponseEntity.ok(response);
+//	    } else {
+//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
+//	    }
+//	}
+	
 	@PostMapping("/login")
-	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
-	    String email = loginData.get("username");
-	    String password = loginData.get("password");
-
-	    UserModel user = userService.getUserByEmailAndPassword(email, password);
-	    if (user != null) {
-	        Map<String, Object> response = new HashMap<>();
-	        response.put("uid", user.getUid());               // 👈 returning uid
-	        response.put("message", "Login Successful!");     // 👈 success message
-	        return ResponseEntity.ok(response);
-	    } else {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
-	    }
+	public String validateUser(@RequestBody UserModel user) {
+		System.out.println(user);
+		boolean b=userService.loginUser(user.getEmail(), user.getPassword());
+		System.out.println(b);
+		if(b)return "Login success..";
+		else return "login failed";
 	}
 
 	@PostMapping("/addExpense")
