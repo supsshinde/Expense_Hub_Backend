@@ -55,9 +55,9 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	public boolean updateUser(UserModel user, int uid) {
-		String sql = "UPDATE user SET uname = ?, email = ?, password = ?, mobile_no = ?, city = ?, pincode = ? WHERE uid = ?";
+		String sql = "UPDATE user SET uname = ?, email = ?, mobile_no = ?, city = ?, pincode = ? WHERE uid = ?";
 
-		int updateCount = template.update(sql, user.getUname(), user.getEmail(), user.getPassword(), user.getMobile(),
+		int updateCount = template.update(sql, user.getUname(), user.getEmail(), user.getMobile(),
 				user.getCity(), user.getPincode(), uid);
 
 		return updateCount > 0; 
