@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.BudgetExpenseSummary;
 import com.example.demo.model.BudgetModel;
 import com.example.demo.model.CategoryModel;
 import com.example.demo.model.ExpenseModel;
@@ -262,4 +263,17 @@ public class UserController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Budget update failed.");
 	    }
 	}
+	@GetMapping("/budget-expense-summary/{uid}")
+	public ResponseEntity<BudgetExpenseSummary> getBudgetExpenseSummary(@PathVariable int uid) {
+	    double totalExpense = expService.findTotalExpenseByUserId(uid);
+	    double totalBudget = budgetService.findTotalBudgetByUserId(uid);
+
+	    String message = totalExpense > totalBudget ? "⚠️ Budget Exceeded!" : "✅ Within Budget";
+
+	    BudgetExpenseSummary dto = new BudgetExpenseSummary(totalBudget, totalExpense, message);
+
+	    return ResponseEntity.ok(dto);
+	}
+
+
 }

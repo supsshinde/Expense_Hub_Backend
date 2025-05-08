@@ -11,4 +11,5 @@ public interface BudgetService {
 	public boolean isupdateBudget(BudgetModel budget);
 	public List<BudgetModel> getBudgetsByUid(int uid);
 	public boolean updateBudgetByIdAndUid(BudgetModel budget);
+	public Double findTotalBudgetByUserId(int uid);
 }

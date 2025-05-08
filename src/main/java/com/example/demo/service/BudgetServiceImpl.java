@@ -47,5 +47,9 @@ public class BudgetServiceImpl implements BudgetService {
 		// TODO Auto-generated method stub
 		return budgetRepo.updateBudgetByIdAndUid(budget)>0;
 	}
+	public Double findTotalBudgetByUserId(int uid) {
+	    return budgetRepo.findTotalBudgetByUserId(uid);
+	}
+
 
 }
