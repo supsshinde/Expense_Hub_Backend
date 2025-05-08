@@ -73,4 +73,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 		return expRepo.findTotalExpenseByUserId(uid);
 	}
 
+	@Override
+	public int countExpensesByUid(int uid) {
+		// TODO Auto-generated method stub
+		return expRepo.countExpensesByUid(uid);
+	}
+
 }

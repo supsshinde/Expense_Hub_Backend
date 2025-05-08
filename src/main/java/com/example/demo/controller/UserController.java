@@ -274,6 +274,11 @@ public class UserController {
 
 	    return ResponseEntity.ok(dto);
 	}
+	 @GetMapping("/countExpensesByUid/{uid}")
+	    public ResponseEntity<Integer> countExpenses(@PathVariable int uid) {
+	        int count = expService.countExpensesByUid(uid);
+	        return ResponseEntity.ok(count);
+	    }
 
 
 }
