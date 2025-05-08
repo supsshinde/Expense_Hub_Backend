@@ -65,7 +65,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 	 // Service
 	    public List<ExpenseModel> getExpensesByUserId(Integer uid) {
 	    	String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, " +
-	                "e.cid, c.cname AS category_name, u.uid AS uid " +
+	                "e.cid, c.Cname AS category_name, u.uid AS uid " +
 	                "FROM expense e " +
 	                "JOIN category c ON e.cid = c.cid " +
 	                "JOIN user_expense ue ON e.eid = ue.eid " +
@@ -191,4 +191,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		String insertUserExpense = "INSERT INTO user_expense (uid, eid, expense_price) VALUES (?, ?, ?)";
 		template.update(insertUserExpense, uid, eid, expense.getEprice());
 	}
+	
+	 public Double findTotalExpenseByUserId(int uid) {
+		 String sql = "SELECT SUM(expense_price) FROM user_expense WHERE uid = ?";
+	        Double totalExpense = template.queryForObject(sql, Double.class, uid);
+	        return totalExpense != null ? totalExpense : 0.0;
+	    }
 }

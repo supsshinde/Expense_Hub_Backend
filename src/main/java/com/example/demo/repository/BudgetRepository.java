@@ -9,6 +9,8 @@ public interface BudgetRepository {
 	public List<BudgetModel> getAllBudgets();
 	public boolean isdeleteBudgetById(int bid);
 	public boolean isupdateBudget(BudgetModel budget);
-	
+	public List<BudgetModel> getBudgetsByUid(int uid);
+	 int updateBudgetByIdAndUid(BudgetModel budget);
+
 
 }

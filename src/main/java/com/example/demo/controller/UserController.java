@@ -112,30 +112,30 @@ public class UserController {
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
 
-//	@PostMapping("/login")
-//	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
-//	    String email = loginData.get("username");
-//	    String password = loginData.get("password");
-//
-//	    UserModel user = userService.getUserByEmailAndPassword(email, password);
-//	    if (user != null) {
-//	        Map<String, Object> response = new HashMap<>();
-//	        response.put("uid", user.getUid());               
-//	        response.put("message", "Login Successful!");     
-//	        return ResponseEntity.ok(response);
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
-//	    }
-//	}
-	
 	@PostMapping("/login")
-	public String validateUser(@RequestBody UserModel user) {
-		System.out.println(user);
-		boolean b=userService.loginUser(user.getEmail(), user.getPassword());
-		System.out.println(b);
-		if(b)return "Login success..";
-		else return "login failed";
+	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
+	    String email = loginData.get("username");
+	    String password = loginData.get("password");
+
+	    UserModel user = userService.getUserByEmailAndPassword(email, password);
+	    if (user != null) {
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("uid", user.getUid());               
+	        response.put("message", "Login Successful!");     
+	        return ResponseEntity.ok(response);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
+	    }
 	}
+	
+//	@PostMapping("/login")
+//	public String validateUser(@RequestBody UserModel user) {
+//		System.out.println(user);
+//		boolean b=userService.loginUser(user.getEmail(), user.getPassword());
+//		System.out.println(b);
+//		if(b)return "Login success..";
+//		else return "login failed";
+//	}
 
 	@PostMapping("/addExpense")
 	public String addExpense(@RequestBody ExpenseModel expense )
@@ -232,9 +232,34 @@ public class UserController {
 			return "budget id not found to delete";
 		}
 	}
+	@GetMapping("/viewBudgetsByUid/{uid}")
+	public List<BudgetModel> getBudgetsByUid(@PathVariable int uid) {
+	    return budgetService.getBudgetsByUid(uid);
+	}
+
+	
 	@GetMapping("/expense/user/{uid}")
 	public ResponseEntity<List<ExpenseModel>> getUserExpenses(@PathVariable int uid) {
 	    List<ExpenseModel> expenses = expService.getExpensesByUid(uid);
 	    return ResponseEntity.ok(expenses);
+	}
+	@GetMapping("/totalExpenseByUid/{uid}")
+    public ResponseEntity<String> getTotalExpense(@PathVariable int uid) {
+        Double totalExpense = expService.findTotalExpenseByUserId(uid);
+        if (totalExpense != null) {
+            return ResponseEntity.ok("Total Expense for user " + uid + " is ₹" + totalExpense);
+        } else {
+            return ResponseEntity.status(404).body("No expenses found for this user.");
+        }
+    }
+	@PutMapping("/updateBudgetById/{bid}")
+	public ResponseEntity<String> updateBudget(@PathVariable int bid, @RequestBody BudgetModel budget) {
+	    budget.setBid(bid); // from path variable
+	    boolean success = budgetService.updateBudgetByIdAndUid(budget);
+	    if (success) {
+	        return ResponseEntity.ok("Budget updated successfully.");
+	    } else {
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Budget update failed.");
+	    }
 	}
 }

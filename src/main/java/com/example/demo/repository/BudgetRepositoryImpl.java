@@ -65,21 +65,60 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 		return value>0?true:false;
 	}
 
+//	@Override
+//	public boolean isupdateBudget(BudgetModel budget) {
+//	    int value = template.update("update budget set uid=?, budget_amount=?, start_date=?, end_date=? where bid=?", 
+//	        new PreparedStatementSetter() {
+//	            @Override
+//	            public void setValues(PreparedStatement ps) throws SQLException {
+//	                ps.setInt(1, budget.getUid());
+//	                ps.setFloat(2, budget.getBudgetAmount());
+//	                ps.setDate(3, budget.getStartDate());
+//	                ps.setDate(4, budget.getEndDate());
+//	                ps.setInt(5, budget.getBid());
+//	            }
+//	        }
+//	    );
+//	    return value > 0 ? true : false;
+//	}
 	@Override
-	public boolean isupdateBudget(BudgetModel budget) {
-	    int value = template.update("update budget set uid=?, budget_amount=?, start_date=?, end_date=? where bid=?", 
-	        new PreparedStatementSetter() {
-	            @Override
-	            public void setValues(PreparedStatement ps) throws SQLException {
-	                ps.setInt(1, budget.getUid());
-	                ps.setFloat(2, budget.getBudgetAmount());
-	                ps.setDate(3, budget.getStartDate());
-	                ps.setDate(4, budget.getEndDate());
-	                ps.setInt(5, budget.getBid());
-	            }
+    public boolean isupdateBudget(BudgetModel budget) {
+        int value = template.update(
+            "UPDATE budget SET budget_amount = ?, start_date = ?, end_date = ? WHERE bid = ? AND uid = ?",
+            new PreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps) throws SQLException {
+                    ps.setFloat(1, budget.getBudgetAmount());
+                    ps.setDate(2, budget.getStartDate());
+                    ps.setDate(3, budget.getEndDate());
+                    ps.setInt(4, budget.getBid());
+                    ps.setInt(5, budget.getUid());  // Ensure the budget belongs to the logged-in user
+                }
+            }
+        );
+        return value > 0;
+    }
+	@Override
+	public List<BudgetModel> getBudgetsByUid(int uid) {
+	    return template.query("SELECT * FROM budget WHERE uid = ?", new Object[]{uid}, new RowMapper<BudgetModel>() {
+	        @Override
+	        public BudgetModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+	            BudgetModel b = new BudgetModel();
+	            b.setBid(rs.getInt(1));
+	            b.setUid(rs.getInt(2));
+	            b.setBudgetAmount(rs.getFloat(3));
+	            b.setStartDate(rs.getDate(4));
+	            b.setEndDate(rs.getDate(5));
+	            return b;
 	        }
-	    );
-	    return value > 0 ? true : false;
+	    });
 	}
+
+	@Override
+	public int updateBudgetByIdAndUid(BudgetModel budget) {
+		String sql = "UPDATE budget SET budget_amount = ?, start_date = ?, end_date = ? WHERE bid = ? AND uid = ?";
+        return template.update(sql, budget.getBudgetAmount(), budget.getStartDate(), budget.getEndDate(), budget.getBid(), budget.getUid());
+	}
+
 
 }
