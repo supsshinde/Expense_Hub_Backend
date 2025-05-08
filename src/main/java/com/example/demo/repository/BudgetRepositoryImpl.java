@@ -119,6 +119,11 @@ public class BudgetRepositoryImpl implements BudgetRepository {
 		String sql = "UPDATE budget SET budget_amount = ?, start_date = ?, end_date = ? WHERE bid = ? AND uid = ?";
         return template.update(sql, budget.getBudgetAmount(), budget.getStartDate(), budget.getEndDate(), budget.getBid(), budget.getUid());
 	}
+	public Double findTotalBudgetByUserId(int uid) {
+	    String sql = "SELECT SUM(budget_amount) FROM budget WHERE uid = ?";
+	    return template.queryForObject(sql, Double.class, uid);
+	}
+
 
 
 }
