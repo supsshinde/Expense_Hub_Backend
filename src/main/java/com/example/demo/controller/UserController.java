@@ -112,30 +112,30 @@ public class UserController {
 	   return (list1 != null && !list1.isEmpty()) ? list1 : Collections.emptyList();
 	}
 
-//	@PostMapping("/login")
-//	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
-//	    String email = loginData.get("username");
-//	    String password = loginData.get("password");
-//
-//	    UserModel user = userService.getUserByEmailAndPassword(email, password);
-//	    if (user != null) {
-//	        Map<String, Object> response = new HashMap<>();
-//	        response.put("uid", user.getUid());               
-//	        response.put("message", "Login Successful!");     
-//	        return ResponseEntity.ok(response);
-//	    } else {
-//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
-//	    }
-//	}
-	
 	@PostMapping("/login")
-	public String validateUser(@RequestBody UserModel user) {
-		System.out.println(user);
-		boolean b=userService.loginUser(user.getEmail(), user.getPassword());
-		System.out.println(b);
-		if(b)return "Login success..";
-		else return "login failed";
+	public ResponseEntity<?> loginUser(@RequestBody Map<String, String> loginData) {
+	    String email = loginData.get("username");
+	    String password = loginData.get("password");
+
+	    UserModel user = userService.getUserByEmailAndPassword(email, password);
+	    if (user != null) {
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("uid", user.getUid());               
+	        response.put("message", "Login Successful!");     
+	        return ResponseEntity.ok(response);
+	    } else {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials!");
+	    }
 	}
+	
+//	@PostMapping("/login")
+//	public String validateUser(@RequestBody UserModel user) {
+//		System.out.println(user);
+//		boolean b=userService.loginUser(user.getEmail(), user.getPassword());
+//		System.out.println(b);
+//		if(b)return "Login success..";
+//		else return "login failed";
+//	}
 
 	@PostMapping("/addExpense")
 	public String addExpense(@RequestBody ExpenseModel expense )

@@ -65,7 +65,7 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 	 // Service
 	    public List<ExpenseModel> getExpensesByUserId(Integer uid) {
 	    	String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, " +
-	                "e.cid, c.cname AS category_name, u.uid AS uid " +
+	                "e.cid, c.Cname AS category_name, u.uid AS uid " +
 	                "FROM expense e " +
 	                "JOIN category c ON e.cid = c.cid " +
 	                "JOIN user_expense ue ON e.eid = ue.eid " +
