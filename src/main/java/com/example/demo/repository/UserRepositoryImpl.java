@@ -27,43 +27,40 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public boolean addUser(UserModel user) {
-//
-//		LocalDate currentDate = LocalDate.now(); // Get system date
-//		Date sqlDate = Date.valueOf(currentDate);
-//
-//		int add = template.update("insert into User values('0',?,?,?,?,?,?,?)", new PreparedStatementSetter() {
-//
-//			@Override
-//			public void setValues(PreparedStatement ps) throws SQLException {
-//				
-//				ps.setString(1, user.getUname());
-//				ps.setString(2, user.getEmail());
-//				ps.setString(3, user.getPassword());
-//				ps.setDate(4, sqlDate); // Set current system date
-//				Long mobile = user.getMobile();
-//				if (mobile != null) {
-//				    ps.setLong(5, mobile);
-//				} else {
-//				    ps.setNull(5, java.sql.Types.BIGINT);
-//				}
-//
-//				ps.setString(6, user.getCity());
-//				ps.setInt(7, user.getPincode());
-//			}
-//		});
-//		return add > 0 ? true : false;
-		return false;
+
+		LocalDate currentDate = LocalDate.now(); // Get system date
+		Date sqlDate = Date.valueOf(currentDate);
+
+		int add = template.update("insert into User values('0',?,?,?,?,?,?,?)", new PreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+				
+				ps.setString(1, user.getUname());
+				ps.setString(2, user.getEmail());
+				ps.setString(3, user.getPassword());
+				ps.setDate(4, sqlDate); // Set current system date
+				Long mobile = user.getMobile();
+				if (mobile != null) {
+				    ps.setLong(5, mobile);
+				} else {
+				    ps.setNull(5, java.sql.Types.BIGINT);
+				}
+
+				ps.setString(6, user.getCity());
+				ps.setInt(7, user.getPincode());
+			}
+		});
+		return add > 0 ? true : false;
 	}
 
 	public boolean updateUser(UserModel user, int uid) {
-		// SQL query to update user profile
 		String sql = "UPDATE user SET uname = ?, email = ?, password = ?, mobile_no = ?, city = ?, pincode = ? WHERE uid = ?";
 
-		// Executing the update query
 		int updateCount = template.update(sql, user.getUname(), user.getEmail(), user.getPassword(), user.getMobile(),
 				user.getCity(), user.getPincode(), uid);
 
-		return updateCount > 0; // Return true if one row is updated, else false
+		return updateCount > 0; 
 	}
 
 	@Override
