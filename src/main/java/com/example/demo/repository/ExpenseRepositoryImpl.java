@@ -197,4 +197,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 	        Double totalExpense = template.queryForObject(sql, Double.class, uid);
 	        return totalExpense != null ? totalExpense : 0.0;
 	    }
+	 public int countExpensesByUid(int uid) {
+		    String sql = "SELECT COUNT(*) FROM user_expense WHERE uid = ?";
+		    return template.queryForObject(sql, Integer.class, uid);
+		}
+
+
 }
