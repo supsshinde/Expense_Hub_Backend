@@ -81,9 +81,10 @@ public class AdminServiceImpl implements AdminService{
 
 	@Override
 	public boolean adminLogin(String username, String password) {
-       String adminUsername="Admin";
+       String adminUsername="admin@gmail.com";
        String adminPassword="Admin";
        
+       System.out.println(adminUsername+ "," +adminPassword);
        if(username.equals(adminUsername) && password.equals(adminPassword))
        {
     	   return true;

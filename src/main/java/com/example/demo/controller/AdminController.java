@@ -31,20 +31,19 @@ public class AdminController {
 	List<UserModel> user=new ArrayList<UserModel>();
 	List<CategoryModel> category=new ArrayList<CategoryModel>();
 	
-	@GetMapping("/adminLogin")
-	public String adminLogin(@RequestParam String  username, @RequestParam String password)
+	@PostMapping("/adminLogin")
+	public boolean adminLogin(@RequestParam String  username, @RequestParam String password)
 	{
 		System.out.println(username+ " " +password);
 		boolean adminLogin = adminService.adminLogin(username, password);
 		
-		return adminLogin ? "Login succesfull...":"Login failed";
+		return adminLogin ? true: false;
 	}
 	
 	@PostMapping("/addCategory")
 	public String addCategory(@RequestBody CategoryModel cat)
 	{
 		boolean b=adminService.addCategory(cat);
-//		System.out.println("Controller" +cat.getCname());
 
 		if(b)
 		{
