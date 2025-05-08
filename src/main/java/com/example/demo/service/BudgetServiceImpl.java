@@ -36,4 +36,16 @@ public class BudgetServiceImpl implements BudgetService {
 		return budgetRepo.isupdateBudget(budget);
 	}
 
+	@Override
+	public List<BudgetModel> getBudgetsByUid(int uid) {
+		// TODO Auto-generated method stub
+		return budgetRepo.getBudgetsByUid(uid);
+	}
+
+	@Override
+	public boolean updateBudgetByIdAndUid(BudgetModel budget) {
+		// TODO Auto-generated method stub
+		return budgetRepo.updateBudgetByIdAndUid(budget)>0;
+	}
+
 }

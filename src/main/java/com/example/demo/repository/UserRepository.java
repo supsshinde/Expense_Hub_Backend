@@ -16,5 +16,6 @@ public interface UserRepository {
 	public UserModel getUserByEmailAndPassword(String email, String password);
 	public boolean resetPassword(String email, String newPassword);
 	
+	
 
 }
