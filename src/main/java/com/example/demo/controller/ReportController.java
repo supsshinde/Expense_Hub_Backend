@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.ReportModel;
+import com.example.demo.service.ExpenseService;
 import com.example.demo.service.ReportService;
-
+ 
 @RestController
 @RequestMapping("/report")
 public class ReportController {
@@ -21,6 +22,9 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ExpenseService expenseService;
+    
     @GetMapping("/category")
     public List<ReportModel> getCategoryReport(
             @RequestParam int uid,
@@ -33,4 +37,27 @@ public class ReportController {
 
         return reportService.getCategoryWiseReport(uid, startDate, endDate);
     }
+    
+//    // Save all transaction in CSV or PDF format
+//    @GetMapping("/export/csv/{uid}")
+//    public void exportToCSV(@PathVariable int uid, HttpServletResponse response) throws IOException {
+//        response.setContentType("text/csv");
+//        String headerKey = "Content-Disposition";
+//        String headerValue = "attachment; filename=transactions_" + uid + ".csv";
+//        response.setHeader(headerKey, headerValue);
+//
+//        List<ExpenseModel> expenses = expenseService.getExpensesByUid(uid);
+//        PrintWriter writer = response.getWriter();
+//
+//        // Write CSV Header
+//        writer.println("ID,Category,Amount,Date,Note");
+//
+//        for (ExpenseModel exp : expenses) {
+//            writer.println(exp.getEid() + "," +exp.getEname()+ "," +exp.getEprice()+ ","  +exp.getPaymentMethod()+ "," +exp.getExpenseDate()+
+//                    exp.getCid() + "," + exp.getUid()+ "," +exp.getCategoryName());
+//        }
+//
+//        writer.flush();
+//        writer.close();
+//    }
 }

@@ -31,15 +31,22 @@ public class UserRepositoryImpl implements UserRepository {
 		LocalDate currentDate = LocalDate.now(); // Get system date
 		Date sqlDate = Date.valueOf(currentDate);
 
-		int add = template.update("insert into User values(0,?,?,?,?,?,?,?)", new PreparedStatementSetter() {
+		int add = template.update("insert into User values('0',?,?,?,?,?,?,?)", new PreparedStatementSetter() {
 
 			@Override
 			public void setValues(PreparedStatement ps) throws SQLException {
+				
 				ps.setString(1, user.getUname());
 				ps.setString(2, user.getEmail());
 				ps.setString(3, user.getPassword());
 				ps.setDate(4, sqlDate); // Set current system date
-				ps.setLong(5, user.getMobile());
+				Long mobile = user.getMobile();
+				if (mobile != null) {
+				    ps.setLong(5, mobile);
+				} else {
+				    ps.setNull(5, java.sql.Types.BIGINT);
+				}
+
 				ps.setString(6, user.getCity());
 				ps.setInt(7, user.getPincode());
 			}
@@ -48,14 +55,12 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	public boolean updateUser(UserModel user, int uid) {
-		// SQL query to update user profile
 		String sql = "UPDATE user SET uname = ?, email = ?, password = ?, mobile_no = ?, city = ?, pincode = ? WHERE uid = ?";
 
-		// Executing the update query
 		int updateCount = template.update(sql, user.getUname(), user.getEmail(), user.getPassword(), user.getMobile(),
 				user.getCity(), user.getPincode(), uid);
 
-		return updateCount > 0; // Return true if one row is updated, else false
+		return updateCount > 0; 
 	}
 
 	@Override
@@ -92,12 +97,12 @@ public class UserRepositoryImpl implements UserRepository {
 		return list1;
 	}
 
-	@Override
-	public boolean loginUser(String email, String password) {
-		String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
-		Integer count = template.queryForObject(sql, new Object[] { email, password }, Integer.class);
-		return count != null && count > 0;
-	}
+//	@Override
+//	public boolean loginUser(String email, String password) {
+//		String sql = "SELECT COUNT(*) FROM user WHERE email = ? AND password = ?";
+//		Integer count = template.queryForObject(sql, new Object[] { email, password }, Integer.class);
+//		return count != null && count > 0;
+//	}
 
 	public UserModel getUserById(int uid) {
 		String query = "SELECT * FROM user WHERE uid = ?";
@@ -147,6 +152,28 @@ public class UserRepositoryImpl implements UserRepository {
 	public boolean resetPassword(String email, String newPassword) {
 		int result = template.update("UPDATE user SET password = ? WHERE email = ?", newPassword, email);
 		return result > 0;
+	}
+
+	@Override
+	public boolean loginUser(String email, String password) {
+		// TODO Auto-generated method stub
+		List value=template.query("select * from user WHERE email=? and password=?", new PreparedStatementSetter() {
+			
+			@Override
+			public void setValues(PreparedStatement ps) throws SQLException {
+
+				ps.setString(1, email);
+				ps.setString(2, password);
+			}
+		}, new RowMapper() {
+
+			@Override
+			public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				return null;
+			}
+		});
+		return value.size()>0?true:false;
 	}
 
 }

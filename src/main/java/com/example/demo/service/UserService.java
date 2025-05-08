@@ -16,5 +16,4 @@ public interface UserService {
 	public UserModel getUserByEmailAndPassword(String email, String password);
 	public boolean resetPassword(String email, String newPassword);
 
-
 }

@@ -78,4 +78,16 @@ public class AdminServiceImpl implements AdminService{
 		// TODO Auto-generated method stub
 		return AdminRepo.getExpenseDistributionByCategory();
 	}
+
+	@Override
+	public boolean adminLogin(String username, String password) {
+       String adminUsername="Admin";
+       String adminPassword="Admin";
+       
+       if(username.equals(adminUsername) && password.equals(adminPassword))
+       {
+    	   return true;
+       }
+       return false;
+	}
 }

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.CategoryModel;
@@ -29,12 +31,20 @@ public class AdminController {
 	List<UserModel> user=new ArrayList<UserModel>();
 	List<CategoryModel> category=new ArrayList<CategoryModel>();
 	
+	@GetMapping("/adminLogin")
+	public String adminLogin(@RequestParam String  username, @RequestParam String password)
+	{
+		System.out.println(username+ " " +password);
+		boolean adminLogin = adminService.adminLogin(username, password);
+		
+		return adminLogin ? "Login succesfull...":"Login failed";
+	}
 	
 	@PostMapping("/addCategory")
 	public String addCategory(@RequestBody CategoryModel cat)
 	{
 		boolean b=adminService.addCategory(cat);
-		System.out.println("Controller" +cat.getCname());
+//		System.out.println("Controller" +cat.getCname());
 
 		if(b)
 		{
