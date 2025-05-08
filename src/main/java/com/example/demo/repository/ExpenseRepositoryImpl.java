@@ -191,4 +191,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		String insertUserExpense = "INSERT INTO user_expense (uid, eid, expense_price) VALUES (?, ?, ?)";
 		template.update(insertUserExpense, uid, eid, expense.getEprice());
 	}
+	
+	 public Double findTotalExpenseByUserId(int uid) {
+		 String sql = "SELECT SUM(expense_price) FROM user_expense WHERE uid = ?";
+	        Double totalExpense = template.queryForObject(sql, Double.class, uid);
+	        return totalExpense != null ? totalExpense : 0.0;
+	    }
 }

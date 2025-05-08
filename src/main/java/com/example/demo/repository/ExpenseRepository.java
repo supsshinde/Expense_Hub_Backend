@@ -15,5 +15,6 @@ public interface ExpenseRepository {
 	public void addExpenseForUser(int uid, ExpenseModel expense);
 	List<ExpenseModel> getExpensesByUid(int uid);
 	 public List<ExpenseModel> getExpensesByUserId(Integer uid);
+	 public Double findTotalExpenseByUserId(int uid);
 
 }
