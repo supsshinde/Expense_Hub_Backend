@@ -1,11 +1,13 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.ExpenseModel;
+import com.example.demo.model.ExpenseReportResponse;
 import com.example.demo.repository.ExpenseRepository;
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -78,5 +80,22 @@ public class ExpenseServiceImpl implements ExpenseService {
 		// TODO Auto-generated method stub
 		return expRepo.countExpensesByUid(uid);
 	}
+
+	@Override
+	public List<Map<String, Object>> getCategoryWiseExpense(int uid) {
+		// TODO Auto-generated method stub
+		return expRepo.getCategoryWiseExpense(uid);
+	}
+	public List<ExpenseModel> getUserExpensesByDateRange(int uid, String fromDate, String toDate) {
+        return expRepo.getUserExpensesBetweenDates(uid, fromDate, toDate);
+    }
+	public ExpenseReportResponse getUserExpenseReport(int uid, String fromDate, String toDate) {
+        List<ExpenseModel> list = expRepo.getUserExpensesBetweenDates(uid, fromDate, toDate);
+        float total = expRepo.getTotalExpenseAmount(uid, fromDate, toDate);
+        return new ExpenseReportResponse(list, total);
+    }
+
+
+	
 
 }

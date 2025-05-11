@@ -25,6 +25,7 @@ import com.example.demo.model.BudgetExpenseSummary;
 import com.example.demo.model.BudgetModel;
 import com.example.demo.model.CategoryModel;
 import com.example.demo.model.ExpenseModel;
+import com.example.demo.model.ExpenseReportResponse;
 import com.example.demo.model.UserModel;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.BudgetService;
@@ -279,6 +280,26 @@ public class UserController {
 	        int count = expService.countExpensesByUid(uid);
 	        return ResponseEntity.ok(count);
 	    }
+	 @GetMapping("/category-wise-expense/{uid}")
+	 public ResponseEntity<List<Map<String, Object>>> getCategoryWiseExpense(@PathVariable int uid) {
+	     List<Map<String, Object>> data = expService.getCategoryWiseExpense(uid);
+	     return ResponseEntity.ok(data);
+	 }
 
-
+//	 @GetMapping("/expense-report")
+//	    public List<ExpenseModel> getUserExpenseReport(
+//	            @RequestParam int uid,
+//	            @RequestParam String from,
+//	            @RequestParam String to
+//	    ) {
+//	        return expService.getUserExpensesByDateRange(uid, from, to);
+//	    }
+	 @GetMapping("/expense-report")
+	    public ExpenseReportResponse getExpenseReport(
+	            @RequestParam int uid,
+	            @RequestParam String from,
+	            @RequestParam String to
+	    ) {
+	        return expService.getUserExpenseReport(uid, from, to);
+	    }
 }
