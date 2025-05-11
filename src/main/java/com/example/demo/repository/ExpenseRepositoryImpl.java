@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -124,10 +126,15 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 
 	@Override
 	public boolean isDeleteExpenseById(int eid) {
-		int value=template.update("delete from expense where eid=?",eid);
-		return value>0?true:false;
+	    // Step 1: Delete from user_expense first
+	    template.update("DELETE FROM user_expense WHERE eid = ?", eid);
+
+	    // Step 2: Now delete from expense
+	    int value = template.update("DELETE FROM expense WHERE eid = ?", eid);
+
+	    return value > 0;
 	}
-	
+
 	@Override
 	public List<ExpenseModel> fetchAllExpensesWithCategory() {
 		String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, e.cid, c.cname " +
@@ -201,6 +208,71 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
 		    String sql = "SELECT COUNT(*) FROM user_expense WHERE uid = ?";
 		    return template.queryForObject(sql, Integer.class, uid);
 		}
+//	 public List<ExpenseModel> getCategoryWiseExpenses(int uid) {
+//	        String sql = "SELECT c.cname AS categoryName, SUM(e.eprice) AS totalExpense " +
+//	                     "FROM expense e " +
+//	                     "JOIN category c ON e.cid = c.cid " +
+//	                     "JOIN user_expense ue ON e.eid = ue.eid " +
+//	                     "WHERE ue.uid = ? " +
+//	                     "GROUP BY c.cname";
+//
+//	        return template.query(sql, new Object[]{uid}, (rs, rowNum) -> {
+//	            ExpenseModel expenseModel = new ExpenseModel();
+//	            expenseModel.setCategoryName(rs.getString("categoryName"));
+//	            expenseModel.setEprice(rs.getFloat("totalExpense"));
+//	            return expenseModel;
+//	        });
+//	    }
+	 public List<Map<String, Object>> getCategoryWiseExpense(int uid) {
+		    String sql = "SELECT c.Cname AS category, SUM(ue.expense_price) AS total " +
+		                 "FROM user_expense ue " +
+		                 "JOIN expense e ON ue.eid = e.eid " +
+		                 "JOIN category c ON e.cid = c.cid " +
+		                 "WHERE ue.uid = ? " +
+		                 "GROUP BY c.Cname";
+
+		    return template.query(sql, new Object[]{uid}, (rs, rowNum) -> {
+		        Map<String, Object> map = new HashMap<>();
+		        map.put("name", rs.getString("category"));
+		        map.put("amount", rs.getDouble("total"));
+		        return map;
+		    });
+		}
+
+	 public List<ExpenseModel> getUserExpensesBetweenDates(int uid, String fromDate, String toDate) {
+		    String sql = "SELECT e.eid, e.ename, e.eprice, e.payment_method, e.description, e.expense_date, " +
+		                 "e.cid, c.Cname AS categoryName, ue.uid " +
+		                 "FROM user_expense ue " +
+		                 "JOIN expense e ON ue.eid = e.eid " +
+		                 "JOIN category c ON e.cid = c.cid " +
+		                 "WHERE ue.uid = ? AND e.expense_date BETWEEN ? AND ? " +
+		                 "ORDER BY e.expense_date";
+
+		    return template.query(sql, new Object[]{uid, fromDate, toDate}, (rs, rowNum) -> mapToExpenseReport(rs));
+		}
+
+		private ExpenseModel mapToExpenseReport(ResultSet rs) throws SQLException {
+		    ExpenseModel model = new ExpenseModel();
+		    model.setEid(rs.getInt("eid"));
+		    model.setEname(rs.getString("ename"));
+		    model.setEprice(rs.getFloat("eprice"));
+		    model.setPaymentMethod(rs.getString("payment_method"));
+		    model.setDescription(rs.getString("description"));
+		    model.setExpenseDate(rs.getDate("expense_date"));
+		    model.setCid(rs.getInt("cid"));
+		    model.setCategoryName(rs.getString("categoryName"));
+		    model.setUid(rs.getInt("uid"));
+		    return model;
+		}
+
+	    public float getTotalExpenseAmount(int uid, String fromDate, String toDate) {
+	        String sql = "SELECT COALESCE(SUM(e.eprice), 0) " +
+	                     "FROM user_expense ue " +
+	                     "JOIN expense e ON ue.eid = e.eid " +
+	                     "WHERE ue.uid = ? AND e.expense_date BETWEEN ? AND ?";
+	        return template.queryForObject(sql, new Object[]{uid, fromDate, toDate}, Float.class);
+	    }
+
+	}
 
 
-}
